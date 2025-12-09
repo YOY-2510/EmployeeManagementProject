@@ -1,18 +1,14 @@
-﻿using EmployeeManagementProject.DTOs.Department;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using EmployeeManagementProject.DTOs.Department;
 using EmployeeManagementProject.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementProject.Controllers
 {
 
-    public class DepartmentController : Controller
+    public class DepartmentController(IDepartmentService departmentService, INotyfService notyf) : Controller
     {
-        private readonly IDepartmentService _departmentService;
 
-        public DepartmentController(IDepartmentService departmentService)
-        {
-            _departmentService = departmentService;
-        }
 
         [HttpGet("Create-Department")]
         public async Task<IActionResult> CreateDepartment()
@@ -26,12 +22,16 @@ namespace EmployeeManagementProject.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _departmentService.AddDepartmentAsync(request, cancellationToken);
+            var result = await departmentService.AddDepartmentAsync(request, cancellationToken);
 
             if (!result.Status)
+            {
+                notyf.Error(result.Message);
                 return View();
+            }
 
-            result.Message = "Department created successfully.";
+            notyf.Success(result.Message);
+
             if (result.Status)
             {
                 return RedirectToAction("Departments");
@@ -43,10 +43,14 @@ namespace EmployeeManagementProject.Controllers
         [HttpGet("get-all-departments")]
         public async Task<IActionResult> Departments(CancellationToken cancellationToken)
         {
-            var result = await _departmentService.GetAllDepartmentsAsync(cancellationToken);
+            var result = await departmentService.GetAllDepartmentsAsync(cancellationToken);
 
             if (!result.Status)
+            {
+                notyf.Error(result.Message);
+
                 return View(Enumerable.Empty<DepartmentDto>());
+            }
 
             return View(result.Data);
         }
@@ -54,11 +58,14 @@ namespace EmployeeManagementProject.Controllers
         [HttpGet("get-department-by-id/{id:guid}")]
         public async Task<IActionResult> Department(Guid id, CancellationToken cancellationToken = default)
         {
-            var result = await _departmentService.GetDepartmentByIdAsync(id, cancellationToken);
+            var result = await departmentService.GetDepartmentByIdAsync(id, cancellationToken);
 
             if (!result.Status)
+            {
+                notyf.Error(result.Message);
                 return View(new DepartmentDto());
 
+            }
             return View(result.Data);
 
         }
@@ -66,11 +73,14 @@ namespace EmployeeManagementProject.Controllers
         [HttpGet("update-department/{id:guid}")]
         public async Task<IActionResult> EditDepartment(Guid id, CancellationToken cancellationToken)
         {
-            var result = await _departmentService.GetDepartmentByIdAsync(id, cancellationToken);
+            var result = await departmentService.GetDepartmentByIdAsync(id, cancellationToken);
 
             if (!result.Status)
+            {
+                notyf.Error(result.Message);
                 return View(new DepartmentDto());
 
+            }
             return View(result.Data);
         }
 
@@ -80,27 +90,29 @@ namespace EmployeeManagementProject.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _departmentService.UpdateDepartmentAsync(id, request, cancellationToken);
+            var result = await departmentService.UpdateDepartmentAsync(id, request, cancellationToken);
 
             if (!result.Status)
             {
+                notyf.Error(result.Message);
                 return RedirectToAction("EditDepartment", new { id });
             }
 
-
+            notyf.Success(result.Message);
             return RedirectToAction("Departments");
         }
 
-        [HttpGet("delete-department/{id:guid}")]
+        [HttpPost("delete-department/{id:guid}")]
         public async Task<IActionResult> DeleteDepartment(Guid id, CancellationToken cancellationToken)
         {
-            var result = await _departmentService.DeleteDepartmentAsync(id, cancellationToken);
+            var result = await departmentService.DeleteDepartmentAsync(id, cancellationToken);
 
             if (!result.Status)
             {
+                notyf.Error(result.Message);
                 return RedirectToAction("Departments");
             }
-
+            notyf.Success(result.Message);
             return RedirectToAction("Departments");
         }
     }

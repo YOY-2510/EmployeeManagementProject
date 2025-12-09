@@ -1,3 +1,4 @@
+using AspNetCoreHero.ToastNotification;
 using EmployeeManagementProject.Data;
 using EmployeeManagementProject.Repositories;
 using EmployeeManagementProject.Repositories.Interface;
@@ -36,6 +37,14 @@ builder.Services.AddScoped<IDepartmentService, DepartmentService>();
 
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 5;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.TopRight;
+}
+);
 
 var app = builder.Build();
 

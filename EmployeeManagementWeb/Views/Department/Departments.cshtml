@@ -30,7 +30,8 @@
                     <td>
                         <a class="btn btn-sm btn-outline-info" asp-action="Department" asp-controller="Department" asp-route-id="@department.DepartmentId">Detail</a>
                         <a class="btn btn-sm btn-warning" asp-action="EditDepartment" asp-controller="Department" asp-route-id="@department.DepartmentId">Edit</a>
-                        <a class="btn btn-sm btn-danger" asp-action="DeleteDepartment" asp-controller="Department" asp-route-id="@department.DepartmentId">Delete</a>
+                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" 
+                                data-department-id="@department.DepartmentId" data-department-name="@department.Name">Delete</button>
                     </td>
                 </tr>
                 i++;
@@ -44,3 +45,37 @@
         }
     </tbody>
 </table>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the department <strong id="departmentNameToDelete"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var departmentId = button.getAttribute('data-department-id');
+            var departmentName = button.getAttribute('data-department-name');
+            
+            document.getElementById('departmentNameToDelete').textContent = departmentName;
+            document.getElementById('deleteForm').action = '/delete-department/' + departmentId;
+        });
+    </script>
+}
