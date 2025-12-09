@@ -52,14 +52,14 @@ namespace EmployeeManagementProject.Controllers
         }
 
         [HttpGet("get-department-by-id/{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Department(Guid id, CancellationToken cancellationToken = default)
         {
             var result = await _departmentService.GetDepartmentByIdAsync(id, cancellationToken);
 
             if (!result.Status)
-                return NotFound(result);
+                return View(new DepartmentDto());
 
-            return Ok(result);
+            return View(result.Data);
 
         }
 

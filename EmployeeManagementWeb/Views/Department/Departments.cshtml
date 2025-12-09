@@ -28,6 +28,7 @@
                     <td>@department.Name</td>
                     <td>@department.Description</td>
                     <td>
+                        <a class="btn btn-sm btn-outline-info" asp-action="Department" asp-controller="Department" asp-route-id="@department.DepartmentId">Detail</a>
                         <a class="btn btn-sm btn-warning" asp-action="EditDepartment" asp-controller="Department" asp-route-id="@department.DepartmentId">Edit</a>
                         <a class="btn btn-sm btn-danger" asp-action="DeleteDepartment" asp-controller="Department" asp-route-id="@department.DepartmentId">Delete</a>
                     </td>
