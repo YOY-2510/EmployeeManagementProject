@@ -63,20 +63,19 @@ namespace EmployeeManagementProject.Controllers
 
         }
 
-        [HttpGet("Get-Dept-By-Id/{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+        [HttpGet("update-department/{id:guid}")]
+        public async Task<IActionResult> EditDepartment(Guid id, CancellationToken cancellationToken)
         {
             var result = await _departmentService.GetDepartmentByIdAsync(id, cancellationToken);
 
             if (!result.Status)
-                return NotFound(result);
+                return View(new DepartmentDto());
 
-            return Ok(result);
-
+            return View(result.Data);
         }
 
-        [HttpPut("Update-Dept/{id:guid}")]
-        public async Task<IActionResult> Update(Guid id, UpdateDepartmentDto request, CancellationToken cancellationToken)
+        [HttpPost("update-department/{id:guid}")]
+        public async Task<IActionResult> EditDepartment(Guid id, UpdateDepartmentDto request, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -84,20 +83,25 @@ namespace EmployeeManagementProject.Controllers
             var result = await _departmentService.UpdateDepartmentAsync(id, request, cancellationToken);
 
             if (!result.Status)
-                return BadRequest(result);
+            {
+                return RedirectToAction("EditDepartment", new { id });
+            }
 
-            return Ok(result);
+
+            return RedirectToAction("Departments");
         }
 
-        [HttpDelete("❌Delete-Department/{id:guid}")]
-        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        [HttpGet("delete-department/{id:guid}")]
+        public async Task<IActionResult> DeleteDepartment(Guid id, CancellationToken cancellationToken)
         {
             var result = await _departmentService.DeleteDepartmentAsync(id, cancellationToken);
 
             if (!result.Status)
-                return NotFound(result);
+            {
+                return RedirectToAction("Departments");
+            }
 
-            return Ok(result);
+            return RedirectToAction("Departments");
         }
     }
 }
