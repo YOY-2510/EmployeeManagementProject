@@ -1,0 +1,45 @@
+﻿@using EmployeeManagementProject.DTOs.Department
+
+@model IEnumerable<DepartmentDto>
+
+@{
+    var i = 1;
+}
+
+<a class="btn btn-primary mb-3" asp-action="CreateDepartment" asp-controller="Department">Create New Department</a>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">S/N</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var department in Model)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@department.Name</td>
+                    <td>@department.Description</td>
+                    <td>
+                        <a class="btn btn-sm btn-warning" asp-action="EditDepartment" asp-controller="Department" asp-route-id="@department.DepartmentId">Edit</a>
+                        <a class="btn btn-sm btn-danger" asp-action="DeleteDepartment" asp-controller="Department" asp-route-id="@department.DepartmentId">Delete</a>
+                    </td>
+                </tr>
+                i++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="4" class="text-center">No departments found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
