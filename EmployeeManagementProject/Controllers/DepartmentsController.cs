@@ -1,10 +1,6 @@
-﻿using Azure.Core;
-using EmployeeManagementProject.DTOs;
-using EmployeeManagementProject.DTOs.Department;
-using EmployeeManagementProject.Models;
+﻿using EmployeeManagementProject.DTOs.Department;
 using EmployeeManagementProject.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
 namespace EmployeeManagementProject.Controllers
 {
@@ -19,7 +15,7 @@ namespace EmployeeManagementProject.Controllers
             _departmentService = departmentService;
         }
 
-        [HttpPost("Create-Departments")]
+        [HttpPost("create-Departments")]
         public async Task<IActionResult> Create([FromBody] CreateDepartmentDto request, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
@@ -70,7 +66,7 @@ namespace EmployeeManagementProject.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("❌Delete-Department/{id:guid}")]
+        [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             var result = await _departmentService.DeleteDepartmentAsync(id, cancellationToken);

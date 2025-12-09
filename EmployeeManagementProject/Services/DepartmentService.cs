@@ -1,5 +1,6 @@
 ﻿using EmployeeManagementProject.DTOs;
 using EmployeeManagementProject.DTOs.Department;
+using EmployeeManagementProject.DTOs.Employee;
 using EmployeeManagementProject.Models;
 using EmployeeManagementProject.Repositories.Interface;
 using EmployeeManagementProject.Services.Interface;
@@ -24,7 +25,7 @@ namespace EmployeeManagementProject.Services
                 var dept = new Department
                 {
                     Name = request.Name,
-                    Description = request.Description
+                    Description = request.Description  
                 };
                 await _departmentRepository.AddAsync(dept, cancellationToken);
                 await _departmentRepository.SaveChangesAsync(cancellationToken);
@@ -113,7 +114,14 @@ namespace EmployeeManagementProject.Services
                 {
                     DepartmentId = dept.DepartmentId,
                     Name = dept.Name,
-                    Description = dept.Description
+                    Description = dept.Description,
+                    Employees = dept.Employees.Select(e => new EmployeeDto
+                    {
+                        EmployeeId = e.EmployeeId,
+                        FullName = e.FullName,
+                        Email = e.Email,
+                        PhoneNumber = e.PhoneNumber
+                    }).ToList()
                 };
 
                 return BaseResponse<DepartmentDto?>.SuccessResponse(dto, "Department retrieved successfully");

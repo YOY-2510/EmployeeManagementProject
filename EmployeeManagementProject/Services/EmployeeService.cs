@@ -1,10 +1,8 @@
-﻿using Azure.Core;
-using EmployeeManagementProject.DTOs;
+﻿using EmployeeManagementProject.DTOs;
 using EmployeeManagementProject.DTOs.Employee;
 using EmployeeManagementProject.Models;
 using EmployeeManagementProject.Repositories.Interface;
 using EmployeeManagementProject.Services.Interface;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 namespace EmployeeManagementProject.Services
@@ -123,7 +121,8 @@ namespace EmployeeManagementProject.Services
                     FullName = emp.FullName,
                     Email = emp.Email,
                     PhoneNumber = emp.PhoneNumber,
-                    DepartmentId = emp.DepartmentId
+                    DepartmentId = emp.DepartmentId,
+                    DepartmentName = emp.Department?.Name
                 };
 
                 Log.Information("Employee {EmployeeId} retrieved successfully", id);

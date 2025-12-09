@@ -1,6 +1,5 @@
 ﻿using EmployeeManagementProject.DTOs;
 using EmployeeManagementProject.DTOs.Department;
-using EmployeeManagementProject.Models;
 
 namespace EmployeeManagementProject.Services.Interface
 {

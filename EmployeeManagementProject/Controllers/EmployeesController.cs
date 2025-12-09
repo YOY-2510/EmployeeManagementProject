@@ -1,11 +1,7 @@
-﻿using Azure.Core;
-using EmployeeManagementProject.DTOs;
-using EmployeeManagementProject.DTOs.Department;
+﻿using EmployeeManagementProject.DTOs;
 using EmployeeManagementProject.DTOs.Employee;
-using EmployeeManagementProject.Models;
 using EmployeeManagementProject.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
 namespace EmployeeManagementProject.Controllers
 {
@@ -21,7 +17,7 @@ namespace EmployeeManagementProject.Controllers
         }
 
         [HttpPost("Create-Employee")]
-        public async Task<IActionResult> Create([FromForm] CreateEmployeeDto request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create([FromBody] CreateEmployeeDto request, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
                 return BadRequest(BaseResponse<string>.FailResponse("Invalid input"));
@@ -67,7 +63,7 @@ namespace EmployeeManagementProject.Controllers
             return Ok(result);
         }
 
-         [HttpDelete("❌Delete-Employee{id:guid}")]
+         [HttpDelete("{id:guid}")]
          public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
          {
             var result = await _employeeService.DeleteEmployeeAsync(id, cancellationToken);
