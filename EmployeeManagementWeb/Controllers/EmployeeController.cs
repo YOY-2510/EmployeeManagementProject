@@ -16,7 +16,7 @@ namespace EmployeeManagementProject.Controllers
         }
 
         [HttpPost("Create-Employee")]
-        public async Task<IActionResult> Create([FromForm] CreateEmployeeDto request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create([FromBody] CreateEmployeeDto request, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid)
                 return BadRequest(BaseResponse<string>.FailResponse("Invalid input"));
@@ -43,7 +43,7 @@ namespace EmployeeManagementProject.Controllers
             var result = await _employeeService.GetEmployeeByIdAsync(id, CancellationToken.None);
 
             if (!result.Status)
-                return NotFound(result);
+                return NotFound(result); 
 
             return Ok(result);
         }
