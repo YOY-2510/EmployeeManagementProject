@@ -31,6 +31,10 @@
     <a asp-controller="Department" asp-action="Departments" class="btn btn-secondary mt-2">Back</a>
 </form>
 
+@{
+    var d = ViewBag.Departments;
+}
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

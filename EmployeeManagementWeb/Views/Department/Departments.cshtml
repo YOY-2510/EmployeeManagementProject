@@ -28,10 +28,10 @@
                     <td>@department.Name</td>
                     <td>@department.Description</td>
                     <td>
-                        <a class="btn btn-sm btn-outline-info" asp-action="Department" asp-controller="Department" asp-route-id="@department.DepartmentId">Detail</a>
-                        <a class="btn btn-sm btn-warning" asp-action="EditDepartment" asp-controller="Department" asp-route-id="@department.DepartmentId">Edit</a>
+                        <a class="btn btn-sm btn-outline-info" asp-action="Department" asp-controller="Department" asp-route-id="@department.Id">Detail</a>
+                        <a class="btn btn-sm btn-warning" asp-action="EditDepartment" asp-controller="Department" asp-route-id="@department.Id">Edit</a>
                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" 
-                                data-department-id="@department.DepartmentId" data-department-name="@department.Name">Delete</button>
+                                data-department-id="@department.Id" data-department-name="@department.Name">Delete</button>
                     </td>
                 </tr>
                 i++;

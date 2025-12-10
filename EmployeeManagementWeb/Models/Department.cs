@@ -4,7 +4,7 @@ namespace EmployeeManagementProject.Models
 {
     public class Department
     {
-        public Guid DepartmentId { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required, MaxLength(100)]
         public string Name { get; set; } = string.Empty;

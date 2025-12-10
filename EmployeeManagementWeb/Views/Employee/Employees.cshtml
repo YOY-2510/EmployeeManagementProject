@@ -1,0 +1,32 @@
+﻿@model IEnumerable<EmployeeManagementProject.DTOs.Employee.EmployeeDto>
+
+<h2>Employees List</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+        {
+            <tr>
+                <td>@emp.FullName</td>
+                <td>@emp.Email</td>
+                <td>@emp.DepartmentName</td>
+                <td>
+                    <a asp-action="EditEmployee" asp-route-id="@emp.EmployeeId">Edit</a> |
+                    <form asp-action="DeleteEmployee" asp-route-id="@emp.EmployeeId" method="post" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="CreateEmployee" class="btn btn-primary">Add Employee</a>

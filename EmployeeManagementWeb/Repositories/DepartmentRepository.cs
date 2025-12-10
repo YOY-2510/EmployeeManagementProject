@@ -40,7 +40,7 @@ namespace EmployeeManagementProject.Repositories
         {
             return await _dbContext.Departments
                 .Include(d => d.Employees)
-                .FirstOrDefaultAsync(d => d.DepartmentId == id, cancellationtoken);
+                .FirstOrDefaultAsync(d => d.Id == id, cancellationtoken);
 
         }
 
@@ -51,7 +51,7 @@ namespace EmployeeManagementProject.Repositories
 
         public async Task<Department?> UpdateAsync(Department department, CancellationToken cancellationtoken)
         {
-            var existing = await _dbContext.Departments.FindAsync(new object[] { department.DepartmentId }, cancellationtoken);
+            var existing = await _dbContext.Departments.FindAsync(new object[] { department.Id }, cancellationtoken);
             if (existing == null) return null;
 
             existing.Name = department.Name;

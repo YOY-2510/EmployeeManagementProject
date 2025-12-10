@@ -1,6 +1,7 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using EmployeeManagementProject.DTOs.Department;
 using EmployeeManagementProject.DTOs.Employee;
+using EmployeeManagementProject.Services;
 using EmployeeManagementProject.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,8 +9,35 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace EmployeeManagementProject.Controllers
 {
 
-    public class EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService, INotyfService notyf) : Controller
+    public class EmployeeController : Controller
     {
+        private readonly IEmployeeService employeeService;
+        private readonly IDepartmentService departmentService;
+        private readonly INotyfService notyf;
+
+        public EmployeeController(
+            IEmployeeService employeeService,
+            IDepartmentService departmentService,
+            INotyfService notyf)
+        {
+            this.employeeService = employeeService;
+            this.departmentService = departmentService;
+            this.notyf = notyf;
+        }
+
+        [HttpGet("employees")]
+        public async Task<IActionResult> Employees()
+        {
+            var response = await employeeService.GetAllEmployeesAsync(CancellationToken.None);
+
+            if (!response.Status || response.Data == null)
+            {
+                // optional: handle error, e.g., show empty list
+                return View(new List<EmployeeDto>());
+            }
+
+            return View(response.Data); // <-- pass only the IEnumerable<EmployeeDto>
+        }
 
         [HttpGet("create-employee")]
         public async Task<IActionResult> CreateEmployee(CancellationToken cancellationToken = default)
@@ -37,7 +65,7 @@ namespace EmployeeManagementProject.Controllers
             }
 
             notyf.Success(result.Message);
-            return RedirectToAction("Departments", "Department");
+            return RedirectToAction("Employees", "Employee");
         }
 
 
@@ -76,7 +104,6 @@ namespace EmployeeManagementProject.Controllers
             await PopulateDepartmentsDropDown(cancellationToken, dto.DepartmentId);
             return View(dto);
         }
-
 
         [HttpPost("update-employee/{id:guid}")]
         public async Task<IActionResult> EditEmployee(Guid id, CreateEmployeeDto request, CancellationToken cancellationToken = default)
@@ -117,17 +144,17 @@ namespace EmployeeManagementProject.Controllers
             return RedirectToAction("Departments", "Department"); 
         }
 
-        private async Task PopulateDepartmentsDropDown(CancellationToken cancellationToken = default, Guid? selectedId = null)
+        private async Task PopulateDepartmentsDropDown(CancellationToken cancellationToken = default,Guid? selectedId = null)
         {
             var result = await departmentService.GetAllDepartmentsAsync(cancellationToken);
 
             if (result.Status && result.Data != null)
             {
-                ViewBag.Departments = new SelectList(result.Data, "Id", "Name", selectedId);
+                ViewBag.Departments = new SelectList(result.Data, "DepartmentId", "Name", selectedId);
             }
             else
             {
-                ViewBag.Departments = new SelectList(Enumerable.Empty<DepartmentDto>(), "Id", "Name");
+                ViewBag.Departments = new SelectList(new List<DepartmentDto>(), "DepartmentId", "Name");
             }
         }
     }

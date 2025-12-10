@@ -32,12 +32,12 @@ namespace EmployeeManagementProject.Services
 
                 var dto = new DepartmentDto
                 {
-                    DepartmentId = dept.DepartmentId,
+                    Id = dept.Id,
                     Name = dept.Name,
                     Description = dept.Description
                 };
 
-                Log.Information("Department {DepartmentId} created successfully", dept.DepartmentId);
+                Log.Information("Department {DepartmentId} created successfully", dept.Id);
                 return BaseResponse<DepartmentDto>.SuccessResponse(dto, "Department created successfully");
             }
             //catch (Exception ex)
@@ -88,7 +88,7 @@ namespace EmployeeManagementProject.Services
 
                 var dtoList = departments.Select(d => new DepartmentDto
                 {
-                    DepartmentId = d.DepartmentId,
+                    Id = d.Id,
                     Name = d.Name,
                     Description = d.Description
                 });
@@ -119,7 +119,7 @@ namespace EmployeeManagementProject.Services
 
                 var dto = new DepartmentDto
                 {
-                    DepartmentId = dept.DepartmentId,
+                    Id = dept.Id,
                     Name = dept.Name,
                     Description = dept.Description,
                     Employees = dept.Employees.Select(e => new EmployeeDto
@@ -162,7 +162,7 @@ namespace EmployeeManagementProject.Services
 
                 var dto = new DepartmentDto
                 {
-                    DepartmentId = dept.DepartmentId,
+                    Id = dept.Id,
                     Name = dept.Name,
                     Description = dept.Description
                 };
