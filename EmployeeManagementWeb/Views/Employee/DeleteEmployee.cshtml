@@ -3,8 +3,7 @@
 <h2>Employee Details</h2>
 
 <div class="card p-3 mb-3">
-    <p><strong>Name:</strong> @Model.FullName</p>
-    <p><strong>Email:</strong> @Model.Email</p>
+     <p><strong>Email:</strong> @Model.Email</p>
     <p><strong>Department:</strong> @Model.DepartmentName</p>
 </div>
 
@@ -17,4 +16,4 @@
     </button>
 </form>
 
-<a asp-controller="Department" asp-action="Departments" class="btn btn-secondary">Back</a>
+<a asp-controller="Department" asp-action="Departments" class="btn btn-danger">Back</a>

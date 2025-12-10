@@ -1,7 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using EmployeeManagementProject.DTOs.Department;
 using EmployeeManagementProject.DTOs.Employee;
-using EmployeeManagementProject.Services;
 using EmployeeManagementProject.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -97,7 +95,9 @@ namespace EmployeeManagementProject.Controllers
 
             var dto = new CreateEmployeeDto
             {
-                FullName = result.Data.FullName,
+                FirstName = result.Data.FirstName,
+                LastName = result.Data.LastName,
+                OtherName = result.Data.OtherName,
                 Email = result.Data.Email,
                 Id = result.Data.Id
             };
@@ -162,6 +162,18 @@ namespace EmployeeManagementProject.Controllers
             }
 
             ViewBag.Departments = list;
+        }
+        private List<SelectListItem> GetTitles()
+        {
+            return new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Mrs", Value = "Mrs" },
+                new SelectListItem { Text = "Mr", Value = "Mr" },
+                new SelectListItem { Text = "Miss", Value = "Miss" },
+                new SelectListItem { Text = "Master", Value = "Master" },
+                new SelectListItem { Text = "Prof", Value = "Prof" },
+                new SelectListItem { Text = "Dr", Value = "Dr" },
+            };
         }
     }
 }
