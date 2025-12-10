@@ -36,14 +36,15 @@ namespace EmployeeManagementProject.Controllers
                 return View(new List<EmployeeDto>());
             }
 
-            return View(response.Data); // <-- pass only the IEnumerable<EmployeeDto>
+            return View(response.Data); 
         }
 
         [HttpGet("create-employee")]
         public async Task<IActionResult> CreateEmployee(CancellationToken cancellationToken = default)
         {
             await PopulateDepartmentsDropDown(cancellationToken);
-            return View();
+            var model = new CreateEmployeeDto(); 
+            return View(model);
         }
 
         [HttpPost("create-employee")]
@@ -51,7 +52,7 @@ namespace EmployeeManagementProject.Controllers
         {
             if (!ModelState.IsValid)
             {
-                await PopulateDepartmentsDropDown(cancellationToken, request.DepartmentId);
+                await PopulateDepartmentsDropDown(cancellationToken, request.Id);
                 return View(request);
             }
 
@@ -60,7 +61,7 @@ namespace EmployeeManagementProject.Controllers
             if (!result.Status)
             {
                 notyf.Error(result.Message);
-                await PopulateDepartmentsDropDown(cancellationToken, request.DepartmentId);
+                await PopulateDepartmentsDropDown(cancellationToken, request.Id);
                 return View(request);
             }
 
@@ -98,10 +99,10 @@ namespace EmployeeManagementProject.Controllers
             {
                 FullName = result.Data.FullName,
                 Email = result.Data.Email,
-                DepartmentId = result.Data.DepartmentId
+                Id = result.Data.Id
             };
 
-            await PopulateDepartmentsDropDown(cancellationToken, dto.DepartmentId);
+            await PopulateDepartmentsDropDown(cancellationToken, dto.Id);
             return View(dto);
         }
 
@@ -110,7 +111,7 @@ namespace EmployeeManagementProject.Controllers
         {
             if (!ModelState.IsValid)
             {
-                await PopulateDepartmentsDropDown(cancellationToken, request.DepartmentId);
+                await PopulateDepartmentsDropDown(cancellationToken, request.Id);
                 return View(request);
             }
 
@@ -119,7 +120,7 @@ namespace EmployeeManagementProject.Controllers
             if (!result.Status)
             {
                 notyf.Error(result.Message);
-                await PopulateDepartmentsDropDown(cancellationToken, request.DepartmentId);
+                await PopulateDepartmentsDropDown(cancellationToken, request.Id);
                 return View(request);
             }
 
@@ -144,18 +145,23 @@ namespace EmployeeManagementProject.Controllers
             return RedirectToAction("Departments", "Department"); 
         }
 
-        private async Task PopulateDepartmentsDropDown(CancellationToken cancellationToken = default,Guid? selectedId = null)
+        private async Task PopulateDepartmentsDropDown(CancellationToken cancellationToken = default, Guid? selectedId = null)
         {
             var result = await departmentService.GetAllDepartmentsAsync(cancellationToken);
 
-            if (result.Status && result.Data != null)
+            var list = new List<SelectListItem>();
+
+            if (result?.Status == true && result.Data != null)
             {
-                ViewBag.Departments = new SelectList(result.Data, "DepartmentId", "Name", selectedId);
+                list = result.Data.Select(d => new SelectListItem
+                {
+                    Value = d.Id.ToString(),  
+                    Text = d.Name,
+                    Selected = (selectedId != null && d.Id == selectedId)
+                }).ToList();
             }
-            else
-            {
-                ViewBag.Departments = new SelectList(new List<DepartmentDto>(), "DepartmentId", "Name");
-            }
+
+            ViewBag.Departments = list;
         }
     }
 }

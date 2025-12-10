@@ -26,7 +26,7 @@ namespace EmployeeManagementProject.Services
                     FullName = request.FullName,
                     Email = request.Email,
                     PhoneNumber = request.PhoneNumber,
-                    DepartmentId = request.DepartmentId
+                    DepartmentId = request.Id
                 };
 
                 var added = await _employeeRepository.AddAsync(employee, cancellationToken);
@@ -37,7 +37,7 @@ namespace EmployeeManagementProject.Services
                     FullName = employee.FullName,
                     Email = employee.Email,
                     PhoneNumber = employee.PhoneNumber,
-                    DepartmentId = employee.DepartmentId
+                    Id = employee.DepartmentId
                 };
 
                 Log.Information("Employee created successfully: {EmployeeId}", employee.EmployeeId);
@@ -88,7 +88,7 @@ namespace EmployeeManagementProject.Services
                     FullName = emp.FullName,
                     Email = emp.Email,
                     PhoneNumber = emp.PhoneNumber,
-                    DepartmentId = emp.DepartmentId
+                    Id = emp.DepartmentId
                 });
 
                 Log.Information("Retrieved {Count} employees", dtoList.Count());
@@ -121,7 +121,7 @@ namespace EmployeeManagementProject.Services
                     FullName = emp.FullName,
                     Email = emp.Email,
                     PhoneNumber = emp.PhoneNumber,
-                    DepartmentId = emp.DepartmentId,
+                    Id = emp.DepartmentId,
                     DepartmentName = emp.Department?.Name
                 };
 
@@ -152,7 +152,7 @@ namespace EmployeeManagementProject.Services
                 employee.FullName = request.FullName;
                 employee.Email = request.Email;
                 employee.PhoneNumber = request.PhoneNumber;
-                employee.DepartmentId = request.DepartmentId;
+                employee.DepartmentId = request.Id;
 
                 var updated = await _employeeRepository.UpdateAsync(employee, cancellationToken);
 
@@ -162,7 +162,7 @@ namespace EmployeeManagementProject.Services
                     FullName = updated.FullName,
                     Email = updated.Email,
                     PhoneNumber = updated.PhoneNumber,
-                    DepartmentId = updated.DepartmentId
+                    Id = updated.DepartmentId
                 };
 
                 Log.Information("Employee {EmployeeId} updated successfully", id);

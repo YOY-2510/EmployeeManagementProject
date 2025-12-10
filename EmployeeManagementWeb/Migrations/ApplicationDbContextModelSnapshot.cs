@@ -24,7 +24,7 @@ namespace EmployeeManagementWeb.Migrations
 
             modelBuilder.Entity("EmployeeManagementProject.Models.Department", b =>
                 {
-                    b.Property<Guid>("DepartmentId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -36,7 +36,7 @@ namespace EmployeeManagementWeb.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("DepartmentId");
+                    b.HasKey("Id");
 
                     b.ToTable("Departments");
                 });
