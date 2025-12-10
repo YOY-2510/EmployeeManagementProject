@@ -40,10 +40,17 @@ namespace EmployeeManagementProject.Services
                 Log.Information("Department {DepartmentId} created successfully", dept.DepartmentId);
                 return BaseResponse<DepartmentDto>.SuccessResponse(dto, "Department created successfully");
             }
+            //catch (Exception ex)
+            //{
+            //    Log.Error(ex, "Error creating department");
+            //    return BaseResponse<DepartmentDto>.FailResponse("An error occurred while creating department");
+            //}
             catch (Exception ex)
             {
                 Log.Error(ex, "Error creating department");
-                return BaseResponse<DepartmentDto>.FailResponse("An error occurred while creating department");
+
+                // TEMPORARY: show the real issue
+                return BaseResponse<DepartmentDto>.FailResponse(ex.Message);
             }
         }
 
