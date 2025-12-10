@@ -1,125 +1,129 @@
-﻿using EmployeeManagementProject.DTOs;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using EmployeeManagementProject.DTOs.Department;
 using EmployeeManagementProject.DTOs.Employee;
 using EmployeeManagementProject.Services.Interface;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EmployeeManagementProject.Controllers
 {
 
-    public class EmployeeController : Controller
+    public class EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService, INotyfService notyf) : Controller
     {
-        private readonly IEmployeeService _employeeService;
-        private readonly IDepartmentService _departmentService;
 
-        public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService)
+        [HttpGet("create-employee")]
+        public async Task<IActionResult> CreateEmployee(CancellationToken cancellationToken = default)
         {
-            _employeeService = employeeService;
-            _departmentService = departmentService;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Details(Guid id)
-        {
-            var employee = await _employeeService.GetEmployeeByIdAsync(id, System.Threading.CancellationToken.None);
-
-            if (employee == null || !employee.Status)
-                return NotFound();
-
-            return View(employee.Data);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var employees = await _employeeService.GetAllEmployeesAsync(System.Threading.CancellationToken.None);
-            return View(employees);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            await PopulateDepartmentsDropDown();
+            await PopulateDepartmentsDropDown(cancellationToken);
             return View();
         }
 
         [HttpPost("create-employee")]
-        public async Task<IActionResult> Create([FromBody] CreateEmployeeDto request, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateEmployee(CreateEmployeeDto request, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
-                await PopulateDepartmentsDropDown(request.DepartmentId, cancellationToken);
+                await PopulateDepartmentsDropDown(cancellationToken, request.DepartmentId);
                 return View(request);
             }
 
-            await _employeeService.AddEmployeeAsync(request, cancellationToken);
-            return RedirectToAction("Index");
+            var result = await employeeService.AddEmployeeAsync(request, cancellationToken);
+
+            if (!result.Status)
+            {
+                notyf.Error(result.Message);
+                await PopulateDepartmentsDropDown(cancellationToken, request.DepartmentId);
+                return View(request);
+            }
+
+            notyf.Success(result.Message);
+            return RedirectToAction("Departments", "Department");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
+
+        [HttpGet("get-employee-by-id/{id:guid}")]
+        public async Task<IActionResult> EmployeeDetails(Guid id, CancellationToken cancellationToken = default)
         {
-            var employeeResult = await _employeeService.GetEmployeeByIdAsync(id, CancellationToken.None);
-            if (employeeResult == null || !employeeResult.Status)
-                return NotFound();
+            var result = await employeeService.GetEmployeeByIdAsync(id, cancellationToken);
+
+            if (!result.Status)
+            {
+                notyf.Error(result.Message);
+                return View(new EmployeeDto());
+            }
+
+            return View(result.Data);
+        }
+
+        [HttpGet("update-employee/{id:guid}")]
+        public async Task<IActionResult> EditEmployee(Guid id, CancellationToken cancellationToken = default)
+        {
+            var result = await employeeService.GetEmployeeByIdAsync(id, cancellationToken);
+
+            if (!result.Status)
+            {
+                notyf.Error(result.Message);
+                return View(new CreateEmployeeDto());
+            }
 
             var dto = new CreateEmployeeDto
             {
-                FullName = employeeResult.Data.FullName,
-                Email = employeeResult.Data.Email,
-                DepartmentId = employeeResult.Data.DepartmentId
+                FullName = result.Data.FullName,
+                Email = result.Data.Email,
+                DepartmentId = result.Data.DepartmentId
             };
 
-            await PopulateDepartmentsDropDown(dto.DepartmentId);
+            await PopulateDepartmentsDropDown(cancellationToken, dto.DepartmentId);
             return View(dto);
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, CreateEmployeeDto request)
+        [HttpPost("update-employee/{id:guid}")]
+        public async Task<IActionResult> EditEmployee(Guid id, CreateEmployeeDto request, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
-                await PopulateDepartmentsDropDown(request.DepartmentId);
+                await PopulateDepartmentsDropDown(cancellationToken, request.DepartmentId);
                 return View(request);
             }
 
-            var result = await _employeeService.UpdateEmployeeAsync(id, request, System.Threading.CancellationToken.None);
+            var result = await employeeService.UpdateEmployeeAsync(id, request, cancellationToken);
 
             if (!result.Status)
             {
-                ModelState.AddModelError("", result.Message ?? "Error updating employee");
-                await PopulateDepartmentsDropDown(request.DepartmentId);
+                notyf.Error(result.Message);
+                await PopulateDepartmentsDropDown(cancellationToken, request.DepartmentId);
                 return View(request);
             }
 
-            return RedirectToAction("Index");
+            notyf.Success(result.Message);
+            return RedirectToAction("Departments", "Department"); 
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(Guid id)
+        [HttpPost("delete-employee/{id:guid}")]
+        public async Task<IActionResult> DeleteEmployee(Guid id, CancellationToken cancellationToken = default)
         {
-            var result = await _employeeService.DeleteEmployeeAsync(id, System.Threading.CancellationToken.None);
+            var result = await employeeService.DeleteEmployeeAsync(id, cancellationToken);
 
             if (!result.Status)
             {
-                TempData["Error"] = result.Message;
+                notyf.Error(result.Message);
+            }
+            else
+            {
+                notyf.Success(result.Message);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Departments", "Department"); 
         }
 
-        private async Task PopulateDepartmentsDropDown(Guid? selectedId = null, CancellationToken cancellationToken = default)
+        private async Task PopulateDepartmentsDropDown(CancellationToken cancellationToken = default, Guid? selectedId = null)
         {
-            var response = await _departmentService.GetAllDepartmentsAsync(cancellationToken);
+            var result = await departmentService.GetAllDepartmentsAsync(cancellationToken);
 
-            if (response.Status && response.Data != null)
+            if (result.Status && result.Data != null)
             {
-                ViewBag.Departments = new SelectList(response.Data, "Id", "Name", selectedId);
+                ViewBag.Departments = new SelectList(result.Data, "Id", "Name", selectedId);
             }
             else
             {

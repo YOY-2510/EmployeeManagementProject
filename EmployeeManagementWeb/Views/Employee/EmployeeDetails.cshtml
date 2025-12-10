@@ -1,0 +1,16 @@
+﻿@model EmployeeManagementProject.DTOs.Employee.EmployeeDto
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<h2>Employee Details</h2>
+
+<div class="card p-3 mb-3">
+    <p><strong>FullName:</strong> @Model.FullName</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Department:</strong> @Model.DepartmentName</p>
+</div>
+
+<a asp-action="EditEmployee" asp-route-id="@Model.EmployeeId" class="btn btn-warning">Edit</a>
+<a asp-controller="Department" asp-action="Departments" class="btn btn-secondary">Back</a>
