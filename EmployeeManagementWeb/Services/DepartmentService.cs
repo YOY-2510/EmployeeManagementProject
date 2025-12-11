@@ -125,9 +125,12 @@ namespace EmployeeManagementProject.Services
                     Employees = dept.Employees.Select(e => new EmployeeDto
                     {
                         EmployeeId = e.EmployeeId,
-                        FullName = e.FullName,
+                        FirstName = e.FirstName,
+                        LastName = e.LastName,
+                        OtherName = e.OtherName,
+                        Gender = e.Gender,
                         Email = e.Email,
-                        PhoneNumber = e.PhoneNumber
+                        Title = e.Title,
                     }).ToList()
                 };
 

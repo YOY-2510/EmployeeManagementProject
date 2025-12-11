@@ -2,11 +2,18 @@
 
 <h2>Employees List</h2>
 
+<a asp-action="CreateEmployee" class="btn btn-primary">Add Employee</a>
+
 <table class="table">
     <thead>
         <tr>
+            <th>Title</th>
             <th>Full Name</th>
             <th>Email</th>
+            <th>Gender</th>
+            <th>Phone Number</th>
+            <th>DOB</th>
+            <th>Address</th>
             <th>Department</th>
             <th>Actions</th>
         </tr>
@@ -15,18 +22,35 @@
         @foreach (var emp in Model)
         {
             <tr>
-                <td>@emp.FullName</td>
+                <td>@emp.Title</td>
+                <td>@($"{emp.FirstName} {emp.LastName} {emp.OtherName}")</td>
                 <td>@emp.Email</td>
+                <td>@emp.Gender</td>
+                <td>@emp.PhoneNumber</td>
+                <td>@emp.DateOfBirth.ToShortDateString()</td>
+                <td>@emp.Address</td>
                 <td>@emp.DepartmentName</td>
                 <td>
+                <td>
+                    <a asp-action="EmployeeDetails"
+                       asp-route-id="@emp.Id"
+                       class="btn btn-info btn-sm">
+                        View
+                    </a>
                     <a asp-action="EditEmployee" asp-route-id="@emp.EmployeeId">Edit</a> |
-                    <form asp-action="DeleteEmployee" asp-route-id="@emp.EmployeeId" method="post" style="display:inline;">
-                        <button type="submit">Delete</button>
+
+                    <form asp-action="DeleteEmployee"
+                          asp-route-id="@emp.EmployeeId"
+                          method="post"
+                          style="display:inline;"
+                          onsubmit="return confirm('Are you sure you want to delete this employee?');">
+
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Delete
+                        </button>
                     </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<a asp-action="CreateEmployee" class="btn btn-primary">Add Employee</a>

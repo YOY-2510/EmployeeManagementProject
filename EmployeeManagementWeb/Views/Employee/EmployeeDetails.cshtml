@@ -7,10 +7,31 @@
 <h2>Employee Details</h2>
 
 <div class="card p-3 mb-3">
-    <p><strong>FullName:</strong> @Model.FullName</p>
+    <p><strong>Title:</strong> @Model.Title</p>
+
+    <p>
+        <strong>Full Name:</strong>
+        @($"{Model.FirstName} {Model.LastName} {Model.OtherName}")
+    </p>
+
+    <p><strong>Gender:</strong> @Model.Gender</p>
+
     <p><strong>Email:</strong> @Model.Email</p>
+
+    <p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
+
+    <p>
+        <strong>Date of Birth:</strong>
+        @(Model.DateOfBirth != null
+                ? Model.DateOfBirth.ToShortDateString()
+                : "—")
+    </p>
+
+    <p><strong>Address:</strong> @Model.Address</p>
+
     <p><strong>Department:</strong> @Model.DepartmentName</p>
 </div>
 
 <a asp-action="EditEmployee" asp-route-id="@Model.EmployeeId" class="btn btn-warning">Edit</a>
+
 <a asp-controller="Department" asp-action="Departments" class="btn btn-secondary">Back</a>

@@ -49,8 +49,14 @@ namespace EmployeeManagementProject.Repositories
             if (existing == null) 
                 return null;
 
-            existing.FullName = employee.FullName;
+            existing.FirstName = employee.FirstName;
+            existing.LastName = employee.LastName;
+            existing.OtherName = employee.OtherName;
+            existing.Gender = employee.Gender;
+            existing.PhoneNumber = employee.PhoneNumber;
             existing.Email = employee.Email;
+            existing.Address = employee.Address;
+            existing.Title = employee.Title;
             existing.DepartmentId = employee.DepartmentId;
 
             _dbContext.Employees.Update(existing);

@@ -30,7 +30,6 @@ namespace EmployeeManagementProject.Controllers
 
             if (!response.Status || response.Data == null)
             {
-                // optional: handle error, e.g., show empty list
                 return View(new List<EmployeeDto>());
             }
 
@@ -41,6 +40,7 @@ namespace EmployeeManagementProject.Controllers
         public async Task<IActionResult> CreateEmployee(CancellationToken cancellationToken = default)
         {
             await PopulateDepartmentsDropDown(cancellationToken);
+            ViewBag.Titles = GetTitles();
             var model = new CreateEmployeeDto(); 
             return View(model);
         }
@@ -51,6 +51,7 @@ namespace EmployeeManagementProject.Controllers
             if (!ModelState.IsValid)
             {
                 await PopulateDepartmentsDropDown(cancellationToken, request.Id);
+                ViewBag.Titles = GetTitles();
                 return View(request);
             }
 
@@ -60,6 +61,7 @@ namespace EmployeeManagementProject.Controllers
             {
                 notyf.Error(result.Message);
                 await PopulateDepartmentsDropDown(cancellationToken, request.Id);
+                ViewBag.Titles = GetTitles();
                 return View(request);
             }
 
@@ -95,14 +97,20 @@ namespace EmployeeManagementProject.Controllers
 
             var dto = new CreateEmployeeDto
             {
+                Id = result.Data.Id,
                 FirstName = result.Data.FirstName,
                 LastName = result.Data.LastName,
                 OtherName = result.Data.OtherName,
+                Gender = result.Data.Gender,
+                PhoneNumber = result.Data.PhoneNumber,
                 Email = result.Data.Email,
-                Id = result.Data.Id
+                Address = result.Data.Address,
+                Title = result.Data.Title,
+                DateOfBirth = result.Data.DateOfBirth
             };
 
             await PopulateDepartmentsDropDown(cancellationToken, dto.Id);
+            ViewBag.Titles = GetTitles();
             return View(dto);
         }
 
@@ -112,6 +120,7 @@ namespace EmployeeManagementProject.Controllers
             if (!ModelState.IsValid)
             {
                 await PopulateDepartmentsDropDown(cancellationToken, request.Id);
+                ViewBag.Titles = GetTitles();
                 return View(request);
             }
 
@@ -121,6 +130,7 @@ namespace EmployeeManagementProject.Controllers
             {
                 notyf.Error(result.Message);
                 await PopulateDepartmentsDropDown(cancellationToken, request.Id);
+                ViewBag.Titles = GetTitles();
                 return View(request);
             }
 
@@ -142,7 +152,7 @@ namespace EmployeeManagementProject.Controllers
                 notyf.Success(result.Message);
             }
 
-            return RedirectToAction("Departments", "Department"); 
+            return RedirectToAction("Employees", "Employee"); 
         }
 
         private async Task PopulateDepartmentsDropDown(CancellationToken cancellationToken = default, Guid? selectedId = null)

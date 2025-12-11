@@ -19,13 +19,19 @@ namespace EmployeeManagementProject.Services
         {
             try
             {
-                Log.Information("Creating a new employee: {FullName}", request.FullName);
+                Log.Information("Creating a new employee: {FullName LastName OtherName}", request.FirstName, request.LastName, request.OtherName );
 
                 var employee = new Employee
                 {
-                    FullName = request.FullName,
-                    Email = request.Email,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    OtherName = request.OtherName,
+                    Gender = request.Gender,
                     PhoneNumber = request.PhoneNumber,
+                    Email = request.Email,
+                    Address = request.Address,
+                    Title = request.Title,
+                    DateOfBirth = request.DateOfBirth,
                     DepartmentId = request.Id
                 };
 
@@ -34,9 +40,15 @@ namespace EmployeeManagementProject.Services
                 var response = new EmployeeDto
                 {
                     EmployeeId = employee.EmployeeId,
-                    FullName = employee.FullName,
-                    Email = employee.Email,
+                    FirstName = employee.FirstName,
+                    LastName = employee.LastName,
+                    OtherName = employee.OtherName,
+                    Gender = employee.Gender,
                     PhoneNumber = employee.PhoneNumber,
+                    Email = employee.Email,
+                    Address = employee.Address,
+                    Title = employee.Title,
+                    DateOfBirth = employee.DateOfBirth,
                     Id = employee.DepartmentId
                 };
 
@@ -85,9 +97,15 @@ namespace EmployeeManagementProject.Services
                 var dtoList = employees.Select(emp => new EmployeeDto
                 {
                     EmployeeId = emp.EmployeeId,
-                    FullName = emp.FullName,
-                    Email = emp.Email,
+                    FirstName = emp.FirstName,
+                    LastName = emp.LastName,
+                    OtherName = emp.OtherName,
+                    Gender = emp.Gender,
                     PhoneNumber = emp.PhoneNumber,
+                    Email = emp.Email,
+                    Address = emp.Address,
+                    Title = emp.Title,
+                    DateOfBirth = emp.DateOfBirth,
                     Id = emp.DepartmentId
                 });
 
@@ -118,9 +136,15 @@ namespace EmployeeManagementProject.Services
                 var dto = new EmployeeDto
                 {
                     EmployeeId = emp.EmployeeId,
-                    FullName = emp.FullName,
-                    Email = emp.Email,
+                    FirstName = emp.FirstName,
+                    LastName = emp.LastName,
+                    OtherName = emp.OtherName,
+                    Gender = emp.Gender,
                     PhoneNumber = emp.PhoneNumber,
+                    Email = emp.Email,
+                    Address = emp.Address,
+                    Title = emp.Title,
+                    DateOfBirth = emp.DateOfBirth,
                     Id = emp.DepartmentId,
                     DepartmentName = emp.Department?.Name
                 };
@@ -149,9 +173,15 @@ namespace EmployeeManagementProject.Services
                     return BaseResponse<EmployeeDto>.FailResponse("Employee not found");
                 }
 
-                employee.FullName = request.FullName;
-                employee.Email = request.Email;
+                employee.FirstName = request.FirstName;
+                employee.LastName = request.LastName;
+                employee.OtherName = request.OtherName;
+                employee.Gender = request.Gender;
                 employee.PhoneNumber = request.PhoneNumber;
+                employee.Email = request.Email;
+                employee.Address = request.Address;
+                employee.Title = request.Title;
+                employee.DateOfBirth = request.DateOfBirth;
                 employee.DepartmentId = request.Id;
 
                 var updated = await _employeeRepository.UpdateAsync(employee, cancellationToken);
@@ -159,9 +189,15 @@ namespace EmployeeManagementProject.Services
                 var dto = new EmployeeDto
                 {
                     EmployeeId = updated.EmployeeId,
-                    FullName = updated.FullName,
-                    Email = updated.Email,
+                    FirstName = updated.FirstName,
+                    LastName = updated.LastName,
+                    OtherName = updated.OtherName,
+                    Gender = updated.Gender,
                     PhoneNumber = updated.PhoneNumber,
+                    Email = updated.Email,
+                    Address = updated.Address,
+                    Title = updated.Title,
+                    DateOfBirth = updated.DateOfBirth,
                     Id = updated.DepartmentId
                 };
 
